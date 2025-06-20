@@ -33,4 +33,4 @@ export const SUPPORTED_LANGUAGES = [
   { id: "es", name: "Spanish" },
 ];
 
-export const GPT_KEY = "pk-SlknSHmlAExIQmTwHzPRxsyKzfiJUVDkLdLueJxYCqdblJha";
+export const GPT_KEY = import.meta.env.VITE_GEMINI_API_KEY;
