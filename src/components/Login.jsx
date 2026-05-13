@@ -73,7 +73,7 @@ const Login = () => {
       <Header />
       <div className="absolute ">
         <img
-          className="inset-0 md:h-full h-screen w-full object-cover"
+          className="inset-0 h-screen w-full object-cover"
           src={LOGIN_BG}
           alt="logo"
         />
