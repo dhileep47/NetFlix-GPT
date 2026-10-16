@@ -76,6 +76,7 @@ const Login = () => {
       </div>
       <div className="relative flex min-h-dvh items-center justify-center px-4 pt-20 pb-10">
         <form
+          data-clarity-mask="true"
           onSubmit={(e) => {
             e.preventDefault();
             handleButtonClick();
