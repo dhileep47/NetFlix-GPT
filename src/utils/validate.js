@@ -1,5 +1,5 @@
-export const checkFormData = (name, email, password, isSignInForm) => {
-  if (isSignInForm) {
+export const checkFormData = (name, email, password, isSignUp) => {
+  if (isSignUp) {
     const isNameValid = /^[a-zA-Z\s]{2,50}$/.test(name);
     if (!isNameValid)
       return "Name must be 2-50 characters long and contain only letters and spaces.";

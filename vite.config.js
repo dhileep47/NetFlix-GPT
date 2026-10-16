@@ -1,14 +1,9 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import envCompatible from 'vite-plugin-env-compatible';
+import tailwindcss from "@tailwindcss/vite";
+import { cloudflare } from "@cloudflare/vite-plugin";
 
-// https://vitejs.dev/config/
+// https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    envCompatible(),
-  ],
-  define: {
-    'process.env': {}
-  }
+  plugins: [react(), tailwindcss(), cloudflare()],
 });
