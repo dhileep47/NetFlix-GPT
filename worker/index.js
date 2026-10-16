@@ -14,13 +14,20 @@ const TMDB_ROUTES = [
 const SYSTEM_PROMPT =
   "You are a movie recommendation system. The user describes what they want to watch, " +
   "possibly in a language other than English. Suggest exactly 5 real, released feature films " +
-  "that best match the request. Use each film's well-known English title, without years, " +
-  "numbering or any extra text.";
+  "that best match the request. For each film give its well-known English title (no year, " +
+  "numbering or extra text) and its original release year.";
 
 const RECOMMENDATION_SCHEMA = {
   type: "object",
   properties: {
-    movies: { type: "array", items: { type: "string" } },
+    movies: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: { title: { type: "string" }, year: { type: "integer" } },
+        required: ["title", "year"],
+      },
+    },
   },
   required: ["movies"],
 };
@@ -72,24 +79,27 @@ const runModel = async (env, input, attempts = 2) => {
   }
 };
 
-const parseTitles = (response) => {
+const parseSuggestions = (response) => {
   const data = typeof response === "string" ? JSON.parse(response) : response;
   if (!Array.isArray(data?.movies)) throw new Error("Unexpected model output");
   return data.movies
-    .filter((title) => typeof title === "string" && title.trim())
-    .map((title) => title.trim())
+    .filter((movie) => typeof movie?.title === "string" && movie.title.trim())
+    .map(({ title, year }) => ({ title: title.trim(), year: Number(year) || null }))
     .slice(0, 5);
 };
 
-// Prefer the best-known exact title match (so "Oldboy" is the 2003 film, not the
-// remake), else the most relevant result with a poster.
-const pickMatch = (title, results) => {
+// Titles are often reused (remakes, unrelated films), so match on the year the model
+// gave first, then fall back to the best-known exact title, then TMDB's top result.
+const pickMatch = ({ title, year }, results) => {
   const withPoster = results.filter((movie) => movie.poster_path);
   const wanted = title.toLowerCase();
-  const [bestExact] = withPoster
+  const exact = withPoster
     .filter((result) => result.title.toLowerCase() === wanted)
     .sort((a, b) => b.vote_count - a.vote_count);
-  const movie = bestExact ?? withPoster[0];
+  const sameYear = (result) =>
+    year && Math.abs(Number(result.release_date?.slice(0, 4)) - year) <= 1;
+  const movie =
+    exact.find(sameYear) ?? withPoster.find(sameYear) ?? exact[0] ?? withPoster[0];
   if (!movie) return null;
 
   const { id, poster_path, release_date, vote_average, overview } = movie;
@@ -129,13 +139,16 @@ const handleRecommend = async (request, env) => {
       max_tokens: 256,
       temperature: 0.7,
     });
-    const titles = parseTitles(result.response);
+    const suggestions = parseSuggestions(result.response);
 
     const matches = await Promise.all(
-      titles.map(async (title) => {
-        const search = new URLSearchParams({ query: title, include_adult: "false" });
+      suggestions.map(async (suggestion) => {
+        const search = new URLSearchParams({
+          query: suggestion.title,
+          include_adult: "false",
+        });
         const data = await tmdbFetch(env, "search/movie", `?${search}`);
-        return pickMatch(title, data.results);
+        return pickMatch(suggestion, data.results);
       })
     );
     const seen = new Set();
