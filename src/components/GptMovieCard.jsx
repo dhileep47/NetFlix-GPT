@@ -1,7 +1,7 @@
 import { IMG_CDN } from "../utils/constants";
 
 const GptMovieCard = ({ movie }) => {
-  const { id, title, poster_path, release_date, vote_average, overview } = movie;
+  const { id, title, poster_path, release_date, vote_average, overview, reason } = movie;
   const year = release_date?.slice(0, 4);
 
   return (
@@ -29,9 +29,13 @@ const GptMovieCard = ({ movie }) => {
           </>
         )}
       </p>
-      <p className="mt-2 hidden text-sm leading-relaxed text-white/60 sm:line-clamp-3">
-        {overview}
-      </p>
+      {reason ? (
+        <p className="mt-2 line-clamp-4 text-sm leading-relaxed text-white/75">{reason}</p>
+      ) : (
+        <p className="mt-2 hidden text-sm leading-relaxed text-white/60 sm:line-clamp-3">
+          {overview}
+        </p>
+      )}
     </a>
   );
 };

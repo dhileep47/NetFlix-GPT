@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addGptMovieResult } from "../utils/gptSlice";
 
-// The Worker asks Workers AI for titles and returns the best TMDB match for each.
+// The Worker asks a Workers AI reasoning model for picks (with a reason for each, in the
+// selected language) and returns only the ones it could verify on TMDB.
 const useGptSearch = () => {
   const dispatch = useDispatch();
+  const lang = useSelector((store) => store.gpt.lang);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -18,7 +20,7 @@ const useGptSearch = () => {
       const res = await fetch("/api/recommend", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({ query, lang }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Something went wrong.");

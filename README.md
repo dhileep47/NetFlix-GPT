@@ -6,7 +6,7 @@ Netflix-inspired movie browser with AI-powered recommendations.
 
 - Firebase email/password authentication
 - Movie rows (Now Playing, Trending, Popular, Upcoming, Horror) and a trailer hero from TMDB
-- "GPT Search": describe what you want to watch in English, Hindi or Spanish and get 5 picks from Workers AI
+- "GPT Search": describe what you want to watch in English, Hindi or Spanish and get 5 verified picks, each with a reason, from a Workers AI reasoning model
 
 ## Stack
 
@@ -19,7 +19,7 @@ The app is a single Cloudflare Worker. Static assets serve the React app (with S
 | Route | Purpose |
 | --- | --- |
 | `GET /api/tmdb/*` | Proxies an allowlisted set of TMDB endpoints so the token stays server-side; responses are edge-cached for an hour |
-| `POST /api/recommend` | Asks Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`, JSON output) for 5 titles and looks each up on TMDB. Rate limited to 10 requests/min per IP |
+| `POST /api/recommend` | Asks the `@cf/openai/gpt-oss-120b` reasoning model (low effort, JSON schema output) for 8 ranked picks with a short reason in the selected language, verifies each against TMDB by title and year, and returns the top 5. Rate limited to 10 requests/min per IP |
 
 ## Local development
 

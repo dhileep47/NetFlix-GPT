@@ -28,6 +28,7 @@ export const LANGUAGE = {
     placeholder: "What would you like to watch today?",
     search: "Search",
     searching: "Searching…",
+    thinking: "AI is thinking through your request…",
     examples: [
       "Mind-bending sci-fi with time loops",
       "Feel-good movies for a rainy day",
@@ -43,6 +44,7 @@ export const LANGUAGE = {
     placeholder: "आज आप क्या देखना चाहेंगे?",
     search: "खोज",
     searching: "खोज रहे हैं…",
+    thinking: "AI आपके अनुरोध पर सोच रहा है…",
     examples: [
       "दिल छू लेने वाली पारिवारिक फ़िल्में",
       "दिमाग घुमा देने वाली साइंस-फ़िक्शन",
@@ -58,6 +60,7 @@ export const LANGUAGE = {
     placeholder: "¿Qué te gustaría ver hoy?",
     search: "Buscar",
     searching: "Buscando…",
+    thinking: "La IA está analizando tu petición…",
     examples: [
       "Comedias románticas de los 2000",
       "Thrillers coreanos intensos",

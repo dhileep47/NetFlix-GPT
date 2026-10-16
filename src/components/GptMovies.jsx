@@ -22,14 +22,20 @@ const GptMovies = ({ loading }) => {
 
   if (loading) {
     return (
-      <div className={`${GRID} mt-12`} aria-busy="true">
-        {Array.from({ length: 5 }, (_, i) => (
-          <div key={i} className="animate-pulse">
-            <div className="aspect-2/3 rounded-lg bg-white/10" />
-            <div className="mt-3 h-4 w-3/4 rounded bg-white/10" />
-            <div className="mt-2 h-3 w-1/2 rounded bg-white/10" />
-          </div>
-        ))}
+      <div className="mt-12" aria-busy="true">
+        <p className="mb-6 flex items-center gap-3 text-white/70">
+          <span className="size-2 animate-ping rounded-full bg-red-500" />
+          {text.thinking}
+        </p>
+        <div className={GRID}>
+          {Array.from({ length: 5 }, (_, i) => (
+            <div key={i} className="animate-pulse">
+              <div className="aspect-2/3 rounded-lg bg-white/10" />
+              <div className="mt-3 h-4 w-3/4 rounded bg-white/10" />
+              <div className="mt-2 h-3 w-1/2 rounded bg-white/10" />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
