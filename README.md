@@ -4,9 +4,9 @@ Netflix-inspired movie browser with AI-powered recommendations.
 
 **Live:** https://netflix-gpt.ananddhileep.workers.dev
 
-- Firebase email/password authentication
+- Open to guests: browse and use AI search without an account; optional Firebase email/password sign-in
 - Movie rows (Now Playing, Trending, Popular, Upcoming, Horror) and a trailer hero from TMDB
-- "GPT Search": describe what you want to watch in English, Hindi or Spanish and get 5 verified picks, each with a reason, from a Workers AI reasoning model
+- "Ask AI": describe what you want to watch in English, Hindi or Spanish and get 5 verified picks, each with a reason, from a Workers AI reasoning model
 
 ## Stack
 

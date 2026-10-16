@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, Navigate } from "react-router";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -20,6 +21,7 @@ const AUTH_ERRORS = {
 
 const Login = () => {
   const dispatch = useDispatch();
+  const user = useSelector((store) => store.user);
   const [isSignUp, setIsSignUp] = useState(false);
   const [errMessage, setErrMessage] = useState("");
 
@@ -58,6 +60,9 @@ const Login = () => {
       setErrMessage(AUTH_ERRORS[error.code] ?? error.message);
     }
   };
+
+  // Signed in (or just signed in): back to browsing.
+  if (user) return <Navigate to="/" replace />;
 
   const inputClass =
     "w-full rounded-md border border-white/20 bg-neutral-800/80 px-4 py-3.5 text-white placeholder:text-neutral-400 focus:border-white focus:outline-none";
@@ -125,6 +130,9 @@ const Login = () => {
               {isSignUp ? "Sign in." : "Sign up now."}
             </button>
           </p>
+          <Link to="/" className="inline-block text-sm text-white/60 hover:text-white hover:underline">
+            ← Keep browsing without an account
+          </Link>
         </form>
       </div>
     </div>

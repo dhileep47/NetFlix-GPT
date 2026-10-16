@@ -1,36 +1,22 @@
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useLocation } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { auth } from "../utils/firebase";
-import { addUser, removeUser } from "../utils/userSlice";
 import { LOGO, SUPPORTED_LANGUAGES } from "../utils/constants";
 import { changeLanguage, toggleGptSearchView } from "../utils/gptSlice";
 
 const Header = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { pathname } = useLocation();
   const user = useSelector((store) => store.user);
   const { showGptSearch, lang } = useSelector((store) => store.gpt);
   const [scrolled, setScrolled] = useState(false);
+  const onLoginPage = pathname === "/login";
 
   const handleSignOut = () => {
     signOut(auth).catch((error) => console.error(error));
   };
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const { uid, email, displayName } = user;
-        dispatch(addUser({ uid, email, displayName }));
-        navigate("/browse");
-      } else {
-        dispatch(removeUser());
-        navigate("/");
-      }
-    });
-    return () => unsubscribe();
-  }, [dispatch, navigate]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -48,8 +34,10 @@ const Header = () => {
       }`}
     >
       <div className="flex items-center justify-between gap-3 px-4 py-3 sm:px-8 lg:px-12">
-        <img src={LOGO} alt="Netflix" className="w-24 shrink-0 sm:w-32 lg:w-40" />
-        {user && (
+        <Link to="/" className="shrink-0">
+          <img src={LOGO} alt="Netflix" className="w-24 sm:w-32 lg:w-40" />
+        </Link>
+        {!onLoginPage && (
           <nav className="flex items-center gap-2 text-sm text-white sm:gap-3 sm:text-base">
             {showGptSearch && (
               <select
@@ -72,22 +60,37 @@ const Header = () => {
                 window.scrollTo({ top: 0 });
               }}
             >
-              {showGptSearch ? "Home" : "GPT Search"}
+              {showGptSearch ? (
+                "Home"
+              ) : (
+                <>
+                  <span aria-hidden="true">✨ </span>Ask AI
+                </>
+              )}
             </button>
-            <button
-              onClick={handleSignOut}
-              title="Sign out"
-              className="flex items-center gap-2 rounded-md px-1 py-1 transition-colors hover:bg-white/10 sm:px-2"
-            >
-              <span
-                aria-hidden="true"
-                className="flex size-8 items-center justify-center rounded bg-red-600 font-semibold"
+            {user ? (
+              <button
+                onClick={handleSignOut}
+                title="Sign out"
+                className="flex items-center gap-2 rounded-md px-1 py-1 transition-colors hover:bg-white/10 sm:px-2"
               >
-                {initial}
-              </span>
-              <span className="hidden md:inline">Sign out</span>
-              <span className="sr-only md:hidden">Sign out</span>
-            </button>
+                <span
+                  aria-hidden="true"
+                  className="flex size-8 items-center justify-center rounded bg-red-600 font-semibold"
+                >
+                  {initial}
+                </span>
+                <span className="hidden md:inline">Sign out</span>
+                <span className="sr-only md:hidden">Sign out</span>
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                className="rounded-md bg-red-600 px-3 py-1.5 font-medium whitespace-nowrap transition-colors hover:bg-red-700 sm:px-4 sm:py-2"
+              >
+                Sign In
+              </Link>
+            )}
           </nav>
         )}
       </div>
