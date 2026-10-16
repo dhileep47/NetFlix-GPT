@@ -6,6 +6,7 @@ export const LOGIN_BG =
 
 export const IMG_CDN = "https://image.tmdb.org/t/p/w342";
 export const BACKDROP_CDN = "https://image.tmdb.org/t/p/w1280";
+export const PREVIEW_CDN = "https://image.tmdb.org/t/p/w780";
 
 // Rows shown on the browse page, in order. `path` is a TMDB endpoint served via /api/tmdb.
 export const MOVIE_LISTS = [

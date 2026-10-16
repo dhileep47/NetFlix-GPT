@@ -9,6 +9,7 @@ const TMDB_ROUTES = [
   /^discover\/movie$/,
   /^search\/movie$/,
   /^movie\/\d+\/videos$/,
+  /^movie\/\d+$/,
 ];
 
 const SYSTEM_PROMPT =

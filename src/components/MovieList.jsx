@@ -11,12 +11,7 @@ const MovieList = ({ title, movies }) => {
       </h2>
       <div className="hide-scrollbar flex snap-x snap-mandatory scroll-px-4 gap-2 overflow-x-auto px-4 py-2 sm:scroll-px-8 sm:gap-3 sm:px-8 lg:scroll-px-12 lg:px-12">
         {withPosters.map((movie) => (
-          <MovieCard
-            key={movie.id}
-            id={movie.id}
-            posterPath={movie.poster_path}
-            title={movie.title}
-          />
+          <MovieCard key={movie.id} movie={movie} />
         ))}
       </div>
     </section>
