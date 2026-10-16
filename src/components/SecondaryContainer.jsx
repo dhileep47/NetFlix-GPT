@@ -7,12 +7,10 @@ const SecondaryContainer = () => {
   if (!lists.nowPlaying) return null;
 
   return (
-    <div className="bg-black">
-      <div className="mt-0 md:-mt-52 md:pl-12 pl-2 relative z-10">
-        {MOVIE_LISTS.map(({ key, title }) => (
-          <MovieList key={key} title={title} movies={lists[key]} />
-        ))}
-      </div>
+    <div className="relative z-10 -mt-16 space-y-6 bg-linear-to-b from-transparent to-black to-[6rem] pb-12 sm:-mt-24 sm:space-y-8 lg:-mt-40">
+      {MOVIE_LISTS.map(({ key, title }) => (
+        <MovieList key={key} title={title} movies={lists[key]} />
+      ))}
     </div>
   );
 };

@@ -59,34 +59,32 @@ const Login = () => {
     }
   };
 
+  const inputClass =
+    "w-full rounded-md border border-white/20 bg-neutral-800/80 px-4 py-3.5 text-white placeholder:text-neutral-400 focus:border-white focus:outline-none";
+
   return (
-    <div className="relative h-screen w-screen overflow-hidden">
+    <div className="relative min-h-dvh">
       <Header />
-      <div className="absolute">
-        <img
-          className="inset-0 h-screen w-screen object-cover"
-          src={LOGIN_BG}
-          alt=""
-        />
+      <div className="fixed inset-0">
+        <img className="h-full w-full object-cover" src={LOGIN_BG} alt="" />
+        <div className="absolute inset-0 bg-black/55" />
       </div>
-      <div className="flex justify-center">
+      <div className="relative flex min-h-dvh items-center justify-center px-4 pt-20 pb-10">
         <form
           onSubmit={(e) => {
             e.preventDefault();
             handleButtonClick();
           }}
-          className="w-[90%] md:w-3/12 my-36 flex flex-col items-start absolute p-12 bg-black/80 text-white rounded-lg"
+          className="w-full max-w-md space-y-4 rounded-lg bg-black/80 px-6 py-10 text-white sm:px-14 sm:py-14"
         >
-          <h1 className="text-3xl font-bold py-4">
-            {isSignUp ? "Sign Up" : "Sign In"}
-          </h1>
+          <h1 className="mb-6 text-3xl font-bold">{isSignUp ? "Sign Up" : "Sign In"}</h1>
           {isSignUp && (
             <input
               ref={name}
               type="text"
               placeholder="Full Name"
               autoComplete="name"
-              className="p-4 my-4 w-full bg-gray-700"
+              className={inputClass}
             />
           )}
           <input
@@ -94,27 +92,38 @@ const Login = () => {
             type="email"
             placeholder="Email address"
             autoComplete="email"
-            className="p-4 my-4 w-full bg-gray-700"
+            className={inputClass}
           />
           <input
             ref={password}
             type="password"
             placeholder="Password"
             autoComplete={isSignUp ? "new-password" : "current-password"}
-            className="p-4 my-4 w-full bg-gray-700"
+            className={inputClass}
           />
-          <p className="text-red-500 text-lg py-2">{errMessage}</p>
-          <button type="submit" className="p-4 my-4 bg-red-700 rounded-lg w-full">
+          {errMessage && (
+            <p role="alert" className="text-sm text-red-400">
+              {errMessage}
+            </p>
+          )}
+          <button
+            type="submit"
+            className="w-full rounded-md bg-red-600 py-3.5 font-semibold transition-colors hover:bg-red-700"
+          >
             {isSignUp ? "Sign Up" : "Sign In"}
           </button>
-          <p
-            onClick={() => {
-              setIsSignUp(!isSignUp);
-              setErrMessage("");
-            }}
-            className="py-4 cursor-pointer"
-          >
-            {!isSignUp ? "New to Netflix? Sign Up now." : "Existing user? Sign In."}
+          <p className="pt-4 text-white/70">
+            {isSignUp ? "Already have an account? " : "New to Netflix? "}
+            <button
+              type="button"
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+                setErrMessage("");
+              }}
+              className="font-medium text-white hover:underline"
+            >
+              {isSignUp ? "Sign in." : "Sign up now."}
+            </button>
           </p>
         </form>
       </div>

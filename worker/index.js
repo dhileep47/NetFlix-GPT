@@ -81,6 +81,21 @@ const parseTitles = (response) => {
     .slice(0, 5);
 };
 
+// Prefer the best-known exact title match (so "Oldboy" is the 2003 film, not the
+// remake), else the most relevant result with a poster.
+const pickMatch = (title, results) => {
+  const withPoster = results.filter((movie) => movie.poster_path);
+  const wanted = title.toLowerCase();
+  const [bestExact] = withPoster
+    .filter((result) => result.title.toLowerCase() === wanted)
+    .sort((a, b) => b.vote_count - a.vote_count);
+  const movie = bestExact ?? withPoster[0];
+  if (!movie) return null;
+
+  const { id, poster_path, release_date, vote_average, overview } = movie;
+  return { id, title: movie.title, poster_path, release_date, vote_average, overview };
+};
+
 const handleRecommend = async (request, env) => {
   if (request.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
@@ -116,13 +131,19 @@ const handleRecommend = async (request, env) => {
     });
     const titles = parseTitles(result.response);
 
-    const movies = await Promise.all(
+    const matches = await Promise.all(
       titles.map(async (title) => {
         const search = new URLSearchParams({ query: title, include_adult: "false" });
         const data = await tmdbFetch(env, "search/movie", `?${search}`);
-        return { title, results: data.results };
+        return pickMatch(title, data.results);
       })
     );
+    const seen = new Set();
+    const movies = matches.filter((movie) => {
+      if (!movie || seen.has(movie.id)) return false;
+      seen.add(movie.id);
+      return true;
+    });
     return json({ movies });
   } catch (error) {
     console.error(error);

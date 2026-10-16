@@ -1,17 +1,35 @@
-const VideoTitle = ({ title, overview }) => {
+import { useSelector } from "react-redux";
+
+const VideoTitle = ({ movieId, title, overview }) => {
+  const trailerKey = useSelector((store) => store.movies.trailerVideo?.key);
+
   return (
-    <div className="absolute pt-[20%] px-6 md:px-24 text-white bg-linear-to-r from-black aspect-video">
-      <h1 className="text-2xl font-semibold md:text-6xl md:font-bold">
-        {title}
-      </h1>
-      <p className="hidden md:block py-6 text-lg w-1/3">{overview}</p>
-      <div className="flex gap-2">
-        <button className="mt-4 md:m-0 px-8 p-2 md:px-16 md:p-4 bg-white text-black text-lg font-semibold hover:bg-white/50 rounded-lg">
-          Play
-        </button>
-        <button className="hidden md:block px-16 p-4 bg-gray-500/50 text-white text-lg rounded-lg">
-          More Info
-        </button>
+    <div className="absolute inset-0 flex items-end bg-linear-to-t from-black via-black/30 to-black/40 pb-24 sm:items-center sm:bg-linear-to-r sm:from-black/90 sm:via-black/40 sm:to-transparent sm:pb-0 lg:pb-16">
+      <div className="w-full px-4 text-white sm:w-3/5 sm:px-8 lg:w-1/2 lg:px-12">
+        <h1 className="text-3xl font-bold drop-shadow-lg sm:text-4xl lg:text-6xl">
+          {title}
+        </h1>
+        <p className="mt-4 hidden text-base text-white/85 drop-shadow sm:line-clamp-3 lg:text-lg">
+          {overview}
+        </p>
+        <div className="mt-5 flex gap-3">
+          <a
+            href={trailerKey ? `https://www.youtube.com/watch?v=${trailerKey}` : undefined}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-2 rounded-md bg-white px-5 py-2 text-base font-semibold text-black transition-colors hover:bg-white/75 sm:px-8 sm:py-3 sm:text-lg"
+          >
+            <span aria-hidden="true">▶</span> Play
+          </a>
+          <a
+            href={`https://www.themoviedb.org/movie/${movieId}`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-2 rounded-md bg-neutral-500/60 px-5 py-2 text-base font-semibold text-white transition-colors hover:bg-neutral-500/40 sm:px-8 sm:py-3 sm:text-lg"
+          >
+            <span aria-hidden="true">ⓘ</span> More Info
+          </a>
+        </div>
       </div>
     </div>
   );
